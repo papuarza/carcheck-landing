@@ -12,22 +12,15 @@
     });
   }
 
-  // Buscador VIN: mientras no haya backend, lleva al formulario de contacto con el VIN precargado.
-  var contactVin = document.getElementById('contact-vin');
-  var msg = document.getElementById('f-msg');
+  // Buscador: lleva a la plataforma (app.carcheck.com.py/buscar) con el VIN, chapa o chapa CADAM.
+  var APP_URL = 'https://app.carcheck.com.py';
   ['vin-form', 'vin-form-2'].forEach(function (id) {
     var f = document.getElementById(id);
     if (!f) return;
     f.addEventListener('submit', function (e) {
       e.preventDefault();
-      var vin = (f.querySelector('input[name="vin"]').value || '').trim().toUpperCase();
-      if (contactVin) contactVin.value = vin;
-      if (msg && !msg.value) {
-        msg.value = vin ? 'Quiero verificar el vehículo con VIN/chasis ' + vin + '.' : 'Quiero verificar un vehículo.';
-      }
-      var target = document.getElementById('contacto');
-      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      setTimeout(function () { var n = document.getElementById('f-nombre'); if (n) n.focus({ preventScroll: true }); }, 600);
+      var q = (f.querySelector('input[name="vin"]').value || '').replace(/[\s.-]/g, '').toUpperCase();
+      window.location.href = APP_URL + '/buscar' + (q ? '?q=' + encodeURIComponent(q) : '');
     });
   });
 
